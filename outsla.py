@@ -58,11 +58,17 @@ def main():
         # Load data from Excel
         df = load_data(file)
 
-        if df is not None:
-            # Assuming you have the current time in the format "HH:mm:ss"
+         if df is not None:
+             # Assuming you have the current time in the format "HH:mm:ss"
             current_time = datetime.now().strftime("%H:%M:%S")
             # Get the current date
             current_date = datetime.now().strftime("%d/%m/%Y")
 
+            # Display sections in the specified format
+            display_sections(df, current_date, current_time)
+            
+            # Display all rows in the specified format
+            # Commented out for now as it's not defined in your provided code
+            # display_all_rows(df)
 if __name__ == "__main__":
     main()
