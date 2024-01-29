@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import pyperclip
 from datetime import datetime
 
 def load_data(file_path):
@@ -22,27 +23,38 @@ def display_sections(df, current_date, current_time):
             # Filter data for the current operator and regional
             filtered_data = df[(df['Operator'] == operator) & (df['Regional'] == regional)]
 
-            st.header(f"TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}")
+            st.header(f"*TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}*")
 
             all_rows_text = ""
 
             for i, (_, row) in enumerate(filtered_data.iterrows(), start=1):
                 all_rows_text += (
-                    f"**{i}. ❌ -Nomer TT:** {row['TT Operator']}\n"
-                    f"**-Titel:** {row['List Site']}\n"
-                    f"**-Operator:** {row['Operator']}\n"
-                    f"**-Mitra:** {row['Mitra']}\n"
-                    f"**-Regional:** {row['Regional']}\n"
-                    f"**-Durasi:** {row['Durasi with SC']}\n"
-                    f"**Last Update:** {row['Update Progress']}\n"
+                    f"*{i}. ❌ -Nomer TT:* {row['TT Operator']}\n"
+                    f"*-Titel:* {row['List Site']}\n"
+                    f"*-Operator:* {row['Operator']}\n"
+                    f"*-Mitra:* {row['Mitra']}\n"
+                    f"*-Regional:* {row['Regional']}\n"
+                    f"*-Durasi:* {row['Durasi with SC']}\n"
+                    f"*Last Update:* {row['Update Progress']}\n"
                     "===================\n"
                 )
 
-            # Copy to Clipboard button
-            copy_button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
-            if st.button("Copy to Clipboard", key=copy_button_key):
+            # Display numbers for each item
+            numbered_list = "\n".join([f"**{i}.**" for i in range(1, len(filtered_data) + 1)])
+
+            # Generate a unique key based on the operator and regional names
+            button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
+
+            # Copy to Clipboard button outside the loop with a unique key
+            if st.button("Copy to Clipboard", key=button_key):
+                # Concatenate title, numbered list, and all rows text
+                clipboard_text = (
+                    f"TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}\n\n"
+                    f"{all_rows_text}\n"
+                )
+
                 # Copy to clipboard
-                st.write(all_rows_text)
+                pyperclip.copy(clipboard_text)
                 st.success("Text copied to clipboard!")
 
 def main():
@@ -70,4 +82,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
