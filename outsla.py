@@ -46,7 +46,7 @@ def display_sections(df, current_date, current_time):
                 st.success("Text copied to clipboard!")
 
 def main():
-    st.title("Excel Data Display")
+    st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
 
     # Upload Excel file
     file = st.file_uploader("Upload Excel File", type=["xlsx", "xls"])
@@ -55,7 +55,7 @@ def main():
         # Load data from Excel
         df = load_data(file)
 
-         if df is not None:
+        if df is not None:
              # Assuming you have the current time in the format "HH:mm:ss"
             current_time = datetime.now().strftime("%H:%M:%S")
             # Get the current date
@@ -67,5 +67,7 @@ def main():
             # Display all rows in the specified format
             # Commented out for now as it's not defined in your provided code
             # display_all_rows(df)
+
 if __name__ == "__main__":
     main()
+
