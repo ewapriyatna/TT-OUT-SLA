@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pyperclip
 from datetime import datetime
+import streamlit.components.v1 as components
 
 def load_data(file_path):
     try:
@@ -23,26 +23,25 @@ def display_sections(df, current_date, current_time):
             # Filter data for the current operator and regional
             filtered_data = df[(df['Operator'] == operator) & (df['Regional'] == regional)]
 
-            st.header(f"*TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}*")
+            st.header(f"TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}")
 
             all_rows_text = ""
 
             for i, (_, row) in enumerate(filtered_data.iterrows(), start=1):
                 all_rows_text += (
-                    f"*{i}. ❌ -Nomer TT:* {row['TT Operator']}\n"
-                    f"*-Titel:* {row['List Site']}\n"
-                    f"*-Operator:* {row['Operator']}\n"
-                    f"*-Mitra:* {row['Mitra']}\n"
-                    f"*-Regional:* {row['Regional']}\n"
-                    f"*-Durasi:* {row['Durasi with SC']}\n"
-                    f"*Last Update:* {row['Update Progress']}\n"
+                    f"**{i}. ❌ -Nomer TT:** {row['TT Operator']}\n"
+                    f"**-Titel:** {row['List Site']}\n"
+                    f"**-Operator:** {row['Operator']}\n"
+                    f"**-Mitra:** {row['Mitra']}\n"
+                    f"**-Regional:** {row['Regional']}\n"
+                    f"**-Durasi:** {row['Durasi with SC']}\n"
+                    f"**Last Update:** {row['Update Progress']}\n"
                     "===================\n"
                 )
 
             # Display numbers for each item
             numbered_list = "\n".join([f"**{i}.**" for i in range(1, len(filtered_data) + 1)])
 
-            
             # Generate a unique key based on the operator and regional names
             button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
 
@@ -64,7 +63,6 @@ def display_sections(df, current_date, current_time):
 
             # Display the content with a unique ID
             st.markdown(f'<div id="{button_key}">{all_rows_text}</div>', unsafe_allow_html=True)
-
 
 def main():
     st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
