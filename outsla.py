@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pyperclip
 from datetime import datetime
+import streamlit.components.v1 as components
 
 def load_data(file_path):
     try:
@@ -45,18 +45,18 @@ def display_sections(df, current_date, current_time):
             # Generate a unique key based on the operator and regional names
             button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
 
-            # Copy to Clipboard button outside the loop with a unique key
-            if st.button("Copy to Clipboard", key=button_key):
-                # Concatenate title, numbered list, and all rows text
-                clipboard_text = (
-                    f"TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}\n\n"
-                    f"{all_rows_text}\n"
-                )
-
-                # Copy to clipboard
-                pyperclip.copy(clipboard_text)
-                st.success("Text copied to clipboard!")
-
+            # Custom HTML button to copy to clipboard
+            copy_button_html = f"""
+                <button onclick="copyToClipboard('{button_key}')">Copy to Clipboard</button>
+                <script>
+                    function copyToClipboard(buttonKey) {{
+                        var textToCopy = document.getElementById(buttonKey).innerText;
+                        navigator.clipboard.writeText(textToCopy).then(function() {{
+                            alert("Text copied to clipboard!");
+                        }});
+                    }}
+                </script>
+            """
 def main():
     st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
 
