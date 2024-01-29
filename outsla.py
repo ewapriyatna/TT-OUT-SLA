@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pyperclip
+import streamlit.components.v1 as components
 from datetime import datetime
 
 def load_data(file_path):
