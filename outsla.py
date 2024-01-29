@@ -57,6 +57,13 @@ def display_sections(df, current_date, current_time):
                     }}
                 </script>
             """
+
+             # Display the button
+            components.html(copy_button_html)
+
+            # Display the content with a unique ID
+            st.markdown(f'<div id="{button_key}">{all_rows_text}</div>', unsafe_allow_html=True)
+
 def main():
     st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
 
