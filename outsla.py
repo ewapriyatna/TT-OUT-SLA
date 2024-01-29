@@ -38,9 +38,6 @@ def display_sections(df, current_date, current_time):
                     "===================\n"
                 )
 
-            # Display the content
-            st.markdown(all_rows_text)
-
             # Copy to Clipboard button
             copy_button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
             if st.button("Copy to Clipboard", key=copy_button_key):
