@@ -65,7 +65,7 @@ def display_sections(df, current_date, current_time):
             st.markdown(f'<div id="{button_key}">{all_rows_text}</div>', unsafe_allow_html=True)
 
 def main():
-    st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
+    st.title("Excel Data Display")
 
     # Upload Excel file
     file = st.file_uploader("Upload Excel File", type=["xlsx", "xls"])
@@ -75,17 +75,18 @@ def main():
         df = load_data(file)
 
         if df is not None:
-             # Assuming you have the current time in the format "HH:mm:ss"
+            # Assuming you have the current time in the format "HH:mm:ss"
             current_time = datetime.now().strftime("%H:%M:%S")
             # Get the current date
             current_date = datetime.now().strftime("%d/%m/%Y")
 
-            # Display sections in the specified format
-            display_sections(df, current_date, current_time)
-            
-            # Display all rows in the specified format
-            # Commented out for now as it's not defined in your provided code
-            # display_all_rows(df)
+            # Filter by regional
+            selected_regional = st.selectbox("Select Regional:", ['All'] + df['Regional'].unique())
+            if selected_regional != 'All':
+                display_sections(df, current_date, current_time)
+            else:
+                # Display sections in the specified format
+                display_sections(df, current_date, current_time)
 
 if __name__ == "__main__":
     main()
