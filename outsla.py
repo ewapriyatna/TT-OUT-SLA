@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pyperclip  # To interact with the clipboard
-from datetime import datetime  # For getting the current date and time
+import pyperclip
+from datetime import datetime
 
 def load_data(file_path):
     try:
@@ -16,47 +16,49 @@ def display_sections(df, current_date, current_time):
     unique_operators = df['Operator'].unique()
 
     for operator in unique_operators:
-        st.header(f"TT OUT SLA OPERATOR {operator} TANGGAL {current_date} {current_time}")
+        # Get unique regionals for the current operator
+        unique_regionals = df[df['Operator'] == operator]['Regional'].unique()
 
-        operator_data = df[df['Operator'] == operator]
-        all_rows_text = ""
+        for regional in unique_regionals:
+            # Filter data for the current operator and regional
+            filtered_data = df[(df['Operator'] == operator) & (df['Regional'] == regional)]
 
-        for i, (_, row) in enumerate(operator_data.iterrows(), start=1):
-            all_rows_text += (
-                f"**{i}. ❌ -Nomer TT:** {row['TT Operator']}\n"
-                f"**-Segmen:** {row['List Site']}\n"
-                f"**-Operator:** {row['Operator']}\n"
-                f"**-Mitra:** {row['Mitra']}\n"
-                f"**-Regional:** {row['Regional']}\n"
-                f"**-Durasi:** {row['Durasi with SC']}\n"
-                f"**Last Update:** {row['Update Progress']}\n"
-                "===================\n"
-            )
+            st.header(f"*TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}*")
 
-        # Display numbers for each item
-        numbered_list = "\n".join([f"**{i}.**" for i in range(1, len(operator_data) + 1)])
+            all_rows_text = ""
 
-        # Generate a unique key based on the operator name
-        button_key = f"copy_button_{operator.replace(' ', '_')}"
+            for i, (_, row) in enumerate(filtered_data.iterrows(), start=1):
+                all_rows_text += (
+                    f"*{i}. ❌ -Nomer TT:* {row['TT Operator']}\n"
+                    f"*-Titel:* {row['List Site']}\n"
+                    f"*-Operator:* {row['Operator']}\n"
+                    f"*-Mitra:* {row['Mitra']}\n"
+                    f"*-Regional:* {row['Regional']}\n"
+                    f"*-Durasi:* {row['Durasi with SC']}\n"
+                    f"*Last Update:* {row['Update Progress']}\n"
+                    "===================\n"
+                )
 
-        # Copy to Clipboard button outside the loop with a unique key
-        if st.button("Copy to Clipboard", key=button_key):
-            # Concatenate title, numbered list, and all rows text
-            clipboard_text = (
-                f"TT OUT SLA OPERATOR {operator} TANGGAL {current_date} {current_time}\n\n"
-                #f"{numbered_list}\n\n"
-                f"{all_rows_text}\n"
-                #"===================\n"
-            )
+            # Display numbers for each item
+            numbered_list = "\n".join([f"**{i}.**" for i in range(1, len(filtered_data) + 1)])
 
-            # Copy to clipboard
-            pyperclip.copy(clipboard_text)
-            st.success("Text copied to clipboard!")
+            # Generate a unique key based on the operator and regional names
+            button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
 
+            # Copy to Clipboard button outside the loop with a unique key
+            if st.button("Copy to Clipboard", key=button_key):
+                # Concatenate title, numbered list, and all rows text
+                clipboard_text = (
+                    f"TT OUT SLA OPERATOR {operator} - {regional} TANGGAL {current_date} {current_time}\n\n"
+                    f"{all_rows_text}\n"
+                )
 
+                # Copy to clipboard
+                pyperclip.copy(clipboard_text)
+                st.success("Text copied to clipboard!")
 
 def main():
-    st.title("LIST OUT SLA")
+    st.title("TT OUT SLA BASED ON OPERATOR & REGIONAL")
 
     # Upload Excel file
     file = st.file_uploader("Upload Excel File", type=["xlsx", "xls"])
@@ -66,8 +68,7 @@ def main():
         df = load_data(file)
 
         if df is not None:
-            
-            # Assuming you have the current time in the format "HH:mm:ss"
+             # Assuming you have the current time in the format "HH:mm:ss"
             current_time = datetime.now().strftime("%H:%M:%S")
             # Get the current date
             current_date = datetime.now().strftime("%d/%m/%Y")
