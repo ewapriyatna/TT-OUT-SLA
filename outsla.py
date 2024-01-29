@@ -38,20 +38,14 @@ def display_sections(df, current_date, current_time):
                     "===================\n"
                 )
 
-            # Display numbers for each item
-            numbered_list = "\n".join([f"**{i}.**" for i in range(1, len(filtered_data) + 1)])
-
-            # Display the content with a unique ID
-            st.markdown(f'<div id="{operator}_{regional}">{all_rows_text}</div>', unsafe_allow_html=True)
+            # Display the content
+            st.markdown(all_rows_text)
 
             # Copy to Clipboard button
             copy_button_key = f"copy_button_{operator.replace(' ', '_')}_{regional.replace(' ', '_')}"
             if st.button("Copy to Clipboard", key=copy_button_key):
-                # Get the content to copy using the unique ID
-                content_to_copy = st.markdown(f'<div id="{operator}_{regional}">{all_rows_text}</div>', unsafe_allow_html=True)
-                
                 # Copy to clipboard
-                st.session_state[copy_button_key] = content_to_copy.markdown
+                st.write(all_rows_text)
                 st.success("Text copied to clipboard!")
 
 def main():
@@ -69,14 +63,6 @@ def main():
             current_time = datetime.now().strftime("%H:%M:%S")
             # Get the current date
             current_date = datetime.now().strftime("%d/%m/%Y")
-
-            # Filter by regional
-            selected_regional = st.selectbox("Select Regional:", ['All'] + df['Regional'].unique())
-            if selected_regional != 'All':
-                display_sections(df, current_date, current_time)
-            else:
-                # Display sections in the specified format
-                display_sections(df, current_date, current_time)
 
 if __name__ == "__main__":
     main()
